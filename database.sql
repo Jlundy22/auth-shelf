@@ -15,3 +15,6 @@ CREATE TABLE "item" (
     "image_url" VARCHAR (2083),
     "user_id" INT REFERENCES "user"
 );
+
+INSERT INTO "item" ("description", "image_url", "user_id")
+VALUES ('Hot Rod Blu Ray', 'https://i.ebayimg.com/images/g/l1wAAOSwMy1hro7n/s-l1600.jpg', 1);
