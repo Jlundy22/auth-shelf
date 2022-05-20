@@ -26,9 +26,9 @@ function* createThing(action) {
     // state of our things reducer:
 
 
-  // yield put({
-  //   type: 'TBD'
-  // })
+  yield put({
+    type: 'FETCH_SHELF'
+  })
 }
 
 

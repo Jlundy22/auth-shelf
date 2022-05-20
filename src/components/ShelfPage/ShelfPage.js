@@ -1,19 +1,26 @@
 import React from 'react';
 
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 function ShelfPage() {
   const [newThing, setNewThing] = useState('');
   const [newImageUrl, setNewImageUrl] = useState('');
+  const shelf = useSelector((store) => store.shelfReducer);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({
+      type: 'FETCH_SHELF',
+    });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch({
       type: 'CREATE_THING',
-      payload: { 
+      payload: {
         newThing,
         newImageUrl
       }
@@ -22,55 +29,42 @@ function ShelfPage() {
     setNewImageUrl('');
   }
 
-  return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="add a thing"
-          value={newThing}
-          onChange={(e) => { setNewThing(e.target.value) }}></input>
+    
+
+    return (
+      <>
+        <div className='container'>
+        <form onSubmit={handleSubmit}>
           <input
-          placeholder="add a url"
-          value={newImageUrl}
-          onChange={(e) => { setNewImageUrl(e.target.value) }}></input>
-        <button>Submit!</button>
-      </form>
-      <div className="container">
-        <h2>Shelf</h2>
-        <p>All of the available items can be seen here.</p>
-      </div>
-    </>
+            placeholder="add a thing"
+            value={newThing}
+            onChange={(e) => { setNewThing(e.target.value) }}></input>
+          <input
+            placeholder="add a url"
+            value={newImageUrl}
+            onChange={(e) => { setNewImageUrl(e.target.value) }}></input>
+          <button>Submit!</button>
+        </form>
+          <h2>Shelf</h2>
+          <ul>
+            {shelf.map((item) => {
+              return (
+                <li key={item.id}>
+                  <img src={item.image_url} />
+                  {item.description}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
+       
+      </>
 
-function ShelfPage() {
-  const dispatch = useDispatch();
-  const shelf = useSelector((store) => store.shelfReducer);
+    );
+  }
 
-  useEffect(() => {
-    dispatch({
-      type: 'FETCH_SHELF',
-    });
-  }, []);
-
-  return (
-    <div className='container'>
-      <h2>Shelf</h2>
-      <ul>
-        {shelf.map((item) => {
-          return (
-            <li key={item.id}>
-              <img src={item.image_url} />
-              {item.description}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-
-  );
-}
-
-export default ShelfPage;
+  export default ShelfPage;
 
 
 
