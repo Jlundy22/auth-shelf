@@ -29,6 +29,28 @@ router.get('/', rejectUnauthenticated, (req, res) => {
  */
 router.post('/', (req, res) => {
   // endpoint functionality
+  // ad "image_url" into insert
+  if (req.isAuthenticated()) {
+    const sqlQuery = `
+    INSERT INTO "item" ("description", "image_url", "user_id")
+    VALUES ($1, $2, $3);
+    `
+    const sqlValues = [
+      req.body.newThing,
+      req.body.newImageUrl,
+      req.user.id
+    ]
+    pool.query(sqlQuery, sqlValues)
+      .then((dbRes) => {
+        res.sendStatus(201)
+      })
+      .catch((dbErr) => {
+        res.sendStatus(500)
+      })
+  } else {
+    res.sendStatus(401)
+  }
+
 });
 
 /**
