@@ -17,11 +17,12 @@ router.post('/', (req, res) => {
   // ad "image_url" into insert
   if (req.isAuthenticated()) {
     const sqlQuery = `
-    INSERT INTO "item" ("description", "user_id")
-    VALUES ($1, $2);
+    INSERT INTO "item" ("description", "image_url", "user_id")
+    VALUES ($1, $2, $3);
     `
     const sqlValues = [
       req.body.newThing,
+      req.body.newImageUrl,
       req.user.id
     ]
     pool.query(sqlQuery, sqlValues)

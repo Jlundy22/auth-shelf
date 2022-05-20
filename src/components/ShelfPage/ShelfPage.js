@@ -4,15 +4,21 @@ import { useDispatch } from 'react-redux';
 
 function ShelfPage() {
   const [newThing, setNewThing] = useState('');
+  const [newImageUrl, setNewImageUrl] = useState('');
+
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch({
       type: 'CREATE_THING',
-      payload: { newThing }
+      payload: { 
+        newThing,
+        newImageUrl
+      }
     })
     setNewThing('');
+    setNewImageUrl('');
   }
 
   return (
@@ -22,6 +28,10 @@ function ShelfPage() {
           placeholder="add a thing"
           value={newThing}
           onChange={(e) => { setNewThing(e.target.value) }}></input>
+          <input
+          placeholder="add a url"
+          value={newImageUrl}
+          onChange={(e) => { setNewImageUrl(e.target.value) }}></input>
         <button>Submit!</button>
       </form>
       <div className="container">
