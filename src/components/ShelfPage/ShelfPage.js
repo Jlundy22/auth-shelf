@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -39,6 +40,33 @@ function ShelfPage() {
         <p>All of the available items can be seen here.</p>
       </div>
     </>
+
+
+function ShelfPage() {
+  const dispatch = useDispatch();
+  const shelf = useSelector((store) => store.shelfReducer);
+
+  useEffect(() => {
+    dispatch({
+      type: 'FETCH_SHELF',
+    });
+  }, []);
+
+  return (
+    <div className='container'>
+      <h2>Shelf</h2>
+      <ul>
+        {shelf.map((item) => {
+          return (
+            <li key={item.id}>
+              <img src={item.image_url} />
+              {item.description}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+
   );
 }
 
