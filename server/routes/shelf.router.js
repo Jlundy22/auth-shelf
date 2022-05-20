@@ -20,7 +20,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
       res.send(result.rows);
     })
     .catch((error) => {
-      console.log('Error in the //api/shelf GET request:', error);
+      console.log('Error in the /api/shelf GET request:', error);
     });
 });
 
@@ -34,30 +34,34 @@ router.post('/', (req, res) => {
     const sqlQuery = `
     INSERT INTO "item" ("description", "image_url", "user_id")
     VALUES ($1, $2, $3);
-    `
-    const sqlValues = [
-      req.body.newThing,
-      req.body.newImageUrl,
-      req.user.id
-    ]
-    pool.query(sqlQuery, sqlValues)
+    `;
+    const sqlValues = [req.body.newThing, req.body.newImageUrl, req.user.id];
+    pool
+      .query(sqlQuery, sqlValues)
       .then((dbRes) => {
-        res.sendStatus(201)
+        res.sendStatus(201);
       })
       .catch((dbErr) => {
-        res.sendStatus(500)
-      })
+        res.sendStatus(500);
+      });
   } else {
-    res.sendStatus(401)
+    res.sendStatus(401);
   }
-
 });
 
 /**
  * Delete an item if it's something the logged in user added
  */
 router.delete('/:id', (req, res) => {
-  // endpoint functionality
+  const sqlQuery = 'DELETE FROM item WHERE id=$1';
+  pool
+    .query(sqlQuery, [req.params.id])
+    .then((response) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in /api/shelf DELETE request:', error);
+    });
 });
 
 /**
