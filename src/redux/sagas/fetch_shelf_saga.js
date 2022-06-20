@@ -1,12 +1,28 @@
 import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
 
-function* fetchShelf() {
+// function* fetchShelf() {
+//   try {
+//     const shelf = yield axios.get('/api/shelf/');
+//     console.log('GET shelf', shelf.data);
+//     yield put({
+//       type: 'SET_SHELF',
+//       payload: shelf.data,
+//     });
+//   } catch {
+//     console.log('GET shelf error');
+//   }
+// }
+
+// function* fetchShelfSaga() {
+//   yield takeLatest('FETCH_SHELF', fetchShelf);
+// }
+
+function* fetchImage() {
   try {
-    const shelf = yield axios.get('/api/shelf/');
-    console.log('GET shelf', shelf.data);
+    const shelf = yield axios.get('/api/shelf/images');
     yield put({
-      type: 'SET_SHELF',
+      type: 'SET_IMAGES',
       payload: shelf.data,
     });
   } catch {
@@ -14,11 +30,11 @@ function* fetchShelf() {
   }
 }
 
-function* fetchShelfSaga() {
-  yield takeLatest('FETCH_SHELF', fetchShelf);
+function* fetchImageSaga() {
+  yield takeLatest('FETCH_IMAGE', fetchImage);
 }
 
-export default fetchShelfSaga;
+export default fetchImageSaga;
 
 // import axios from 'axios';
 // import { put, takeLatest } from 'redux-saga/effects';

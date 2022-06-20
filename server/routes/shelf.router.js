@@ -1,8 +1,65 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const multer = require("multer");
 
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
+
+cloudinary.config({
+  cloud_name: "dpaqnprec",
+  api_key: "721591291745171",
+  api_secret: "miwEIDUCgaZm31r3afGjLDuC6XU",
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "DEV",
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// app.get("/", (req, res) => {
+//   return res.json({ message: "Hello World 🇵🇹 🙌" });
+// });
+
+router.post('/upload', upload.single('image'), (req, res) => {
+ {
+    const sqlQuery = `
+    INSERT INTO "images" ( "image_url")
+    VALUES ($1);
+    `;
+    const sqlValues = [req.file.path];
+    pool
+      .query(sqlQuery, sqlValues)
+      .then((dbRes) => {
+        res.sendStatus(201);
+      })
+      .catch((dbErr) => {
+        res.sendStatus(500);
+      });
+  }
+});
+router.get('/images', (req, res) => {
+  const sqlQuery = `
+  SELECT * FROM images
+  `;
+  pool
+    .query(sqlQuery)
+    .then((result) => {
+      res.send(result.rows);
+    })
+    .catch((error) => {
+      console.log('Error in the /api/shelf GET request:', error);
+    });
+});
+
+// app.post("/", upload.single("picture"), async (req, res) => {
+   //return res.json({ picture: req.file.path });
+// });
 
 /**
  * Get all of the items on the shelf
@@ -28,8 +85,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
  * Add an item for the logged in user to the shelf
  */
 router.post('/', (req, res) => {
-  // endpoint functionality
-  // ad "image_url" into insert
+  
   if (req.isAuthenticated()) {
     const sqlQuery = `
     INSERT INTO "item" ("description", "image_url", "user_id")
